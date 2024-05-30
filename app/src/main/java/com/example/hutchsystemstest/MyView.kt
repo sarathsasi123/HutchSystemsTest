@@ -6,54 +6,59 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 
 
 class MyView(private val context: Context?) : View(context) {
 
     private var columnWidth = 0
+    private lateinit var graphCanvas: Canvas
+
     internal inner class Pt(var x: Float, var y: Float)
 
-    private var myPath = arrayOf<Pt>(
-        Pt(100f, 100f),
-        Pt(100f, 200f)
-    )
+    private var myPath = arrayListOf<Pt>()
 
     override fun onDraw(canvas: Canvas) {
-
         super.onDraw(canvas)
-
+        graphCanvas = canvas
         showTextLeft(canvas)
         drawHorizontalLines(canvas)
         drawVerticalLines(canvas)
-        drawGraphLine(canvas)
+        drawGraphLine()
 
     }
 
     private fun drawVerticalLines(canvas: Canvas) {
         val metrics: DisplayMetrics = context!!.resources.displayMetrics
         val width = metrics.widthPixels
-        columnWidth = width/24
+        columnWidth = width / 24
 
-        for (i in 0..24){
+        for (i in 0..24) {
             val paint = Paint()
             paint.color = Color.GRAY
             paint.strokeWidth = 2f
             paint.style = Paint.Style.STROKE
             val path = Path()
-            path.moveTo(columnWidth*i.toFloat(), 100f)
-            path.lineTo(columnWidth*i.toFloat(), 780f)
+            path.moveTo(columnWidth * i.toFloat(), 100f)
+            path.lineTo(columnWidth * i.toFloat(), 780f)
             canvas.drawPath(path, paint)
 
             val textDay = Paint()
             textDay.color = Color.WHITE
             textDay.textSize = 30f
-            canvas.drawText(i.toString(), columnWidth*i.toFloat(), 100f, textDay)
+            canvas.drawText(i.toString(), columnWidth * i.toFloat(), 100f, textDay)
         }
 
     }
 
-    private fun drawGraphLine(canvas: Canvas) {
+    /*To draw driver status line*/
+    private fun drawGraphLine() {
+        for (i in 0..24) {
+            val x = ((columnWidth.toFloat() * i) / 100).toString()
+            val xNumber = x.substringBefore(".").toFloat()
+            myPath.add(Pt(xNumber*100, 700f))
+        }
         val metrics: DisplayMetrics = context!!.resources.displayMetrics
         val width = metrics.widthPixels
         val paint = Paint()
@@ -62,11 +67,12 @@ class MyView(private val context: Context?) : View(context) {
         paint.style = Paint.Style.STROKE
         val path = Path()
         path.moveTo(200f, 700f)
-        path.lineTo(200f, 500f)
-        path.lineTo(400f, 500f)
-        path.lineTo(400f, 700f)
-        path.lineTo(600f, 700f)
-        canvas.drawPath(path, paint)
+        for (pathValue in myPath) {
+            Log.d("Value===", "X: ${pathValue.x} Y: ${pathValue.y}")
+            path.lineTo(pathValue.x,pathValue.y)
+        }
+
+        graphCanvas.drawPath(path, paint)
 
 
     }
@@ -131,5 +137,28 @@ class MyView(private val context: Context?) : View(context) {
         textOnDuty.color = Color.WHITE
         textOnDuty.textSize = 30f
         canvas.drawText(context.getString(R.string.on_duty), 20f, 700f, textOnDuty)
+    }
+
+    fun updateGraph(viewX: Float, viewY: Float) {
+        val x = (viewX / 100).toString()
+        val xNumber = x.substringBefore(".").toInt()
+        Log.d("Data===", "X: $xNumber")
+
+        val y = (viewY / 100).toString()
+        val yNumber = y.substringBefore(".").toInt()
+        Log.d("Data===", "Y: $yNumber")
+//        myPath[xNumber] = Pt((xNumber*100).toFloat(),(yNumber*100).toFloat())
+
+//        myPath[7] = Pt(400f,200f)
+//        myPath[8] = Pt(500f,200f)
+//        myPath[9] = Pt(500f,700f)
+
+        myPath[xNumber+2] = Pt((xNumber*100).toFloat(),(yNumber*100).toFloat())
+        myPath[xNumber+3] = Pt((xNumber*100+100).toFloat(),(yNumber*100).toFloat())
+
+        myPath[xNumber+4] = Pt((xNumber*100+100).toFloat(),700.toFloat())
+
+
+        invalidate()
     }
 }

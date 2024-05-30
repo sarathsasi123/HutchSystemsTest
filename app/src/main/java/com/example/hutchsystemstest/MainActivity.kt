@@ -1,13 +1,10 @@
 package com.example.hutchsystemstest
 
-import android.R
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.hutchsystemstest.databinding.ActivityMainBinding
@@ -17,7 +14,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity(), View.OnTouchListener {
 
     private lateinit var binding: ActivityMainBinding
-private lateinit var myView:MyView
+    private lateinit var myView: MyView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,14 +36,19 @@ private lateinit var myView:MyView
     }
 
 
-
     override fun onTouch(view: View?, event: MotionEvent?): Boolean {
         when (view) {
             myView -> {
-                when (event!!.action){
+                when (event!!.action) {
                     MotionEvent.ACTION_DOWN -> {
 
-                        Log.d("Data===", "yeyy")
+                        val screenX = event.x
+                        val screenY = event.y
+                        val viewX: Float = screenX - view.left
+                        val viewY: Float = screenY - view.top
+                        Log.d("Data===", "X: $viewX")
+                        Log.d("Data===", "Y: $viewY")
+                        myView.updateGraph(viewX, viewY)
                     }
                 }
             }
