@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Hutch systems Test</string>
+    <string name="off_duty">Off-Duty</string>
+    <string name="sleeper_berth">Sleeper Berth</string>
+    <string name="driving">Driving</string>
+    <string name="on_duty">On-Duty</string>
+</resources>
