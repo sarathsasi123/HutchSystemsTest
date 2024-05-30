@@ -10,6 +10,8 @@ import android.view.View
 
 
 class MyView(private val context: Context?) : View(context) {
+
+    private var columnWidth = 0
     internal inner class Pt(var x: Float, var y: Float)
 
     private var myPath = arrayOf<Pt>(
@@ -31,9 +33,9 @@ class MyView(private val context: Context?) : View(context) {
     private fun drawVerticalLines(canvas: Canvas) {
         val metrics: DisplayMetrics = context!!.resources.displayMetrics
         val width = metrics.widthPixels
-        val columnWidth = width/24
+        columnWidth = width/24
 
-        for (i in 1..24){
+        for (i in 0..24){
             val paint = Paint()
             paint.color = Color.GRAY
             paint.strokeWidth = 2f
@@ -42,18 +44,28 @@ class MyView(private val context: Context?) : View(context) {
             path.moveTo(columnWidth*i.toFloat(), 100f)
             path.lineTo(columnWidth*i.toFloat(), 780f)
             canvas.drawPath(path, paint)
+
+            val textDay = Paint()
+            textDay.color = Color.WHITE
+            textDay.textSize = 30f
+            canvas.drawText(i.toString(), columnWidth*i.toFloat(), 100f, textDay)
         }
 
     }
 
     private fun drawGraphLine(canvas: Canvas) {
+        val metrics: DisplayMetrics = context!!.resources.displayMetrics
+        val width = metrics.widthPixels
         val paint = Paint()
         paint.color = Color.RED
         paint.strokeWidth = 5f
         paint.style = Paint.Style.STROKE
         val path = Path()
-        path.moveTo(300f, 700f)
-        path.lineTo(150f, 700f)
+        path.moveTo(200f, 700f)
+        path.lineTo(200f, 500f)
+        path.lineTo(400f, 500f)
+        path.lineTo(400f, 700f)
+        path.lineTo(600f, 700f)
         canvas.drawPath(path, paint)
 
 
