@@ -33,16 +33,16 @@ class MyView(private val context: Context?) : View(context) {
         val width = metrics.widthPixels
         val columnWidth = width/24
 
-//        for (i in 1..24){
+        for (i in 1..24){
             val paint = Paint()
-            paint.color = Color.WHITE
+            paint.color = Color.GRAY
             paint.strokeWidth = 2f
             paint.style = Paint.Style.STROKE
             val path = Path()
-            path.moveTo(220f, 100f)
-            path.lineTo(220f, 780f)
+            path.moveTo(columnWidth*i.toFloat(), 100f)
+            path.lineTo(columnWidth*i.toFloat(), 780f)
             canvas.drawPath(path, paint)
-//        }
+        }
 
     }
 
